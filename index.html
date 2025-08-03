@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zuppi Love Refer & Earn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>❤️ Zuppi Refer & Earn ❤️</h1>
+
+    <form id="referForm">
+      <input type="email" id="email" placeholder="Enter your Email to Refer" required />
+      <button type="submit">Refer Now</button>
+    </form>
+
+    <div class="upi-section">
+      <h2>Send ₹10 to UPI:</h2>
+      <p class="upi-id">8400391466@fam</p>
+      <button onclick="confirmPayment()">I Have Paid</button>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    document.getElementById('referForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const res = await fetch('/refer', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      document.getElementById('message').innerText = data.message;
+    });
+
+    function confirmPayment() {
+      fetch('/upi-payment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ paid: true })
+      }).then(() => {
+        document.getElementById('message').innerText = "✅ Payment Received (You’ll be unlocked after confirmation)";
+      });
+    }
+  </script>
+</body>
+</html>
